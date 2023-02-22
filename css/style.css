@@ -1,3 +1,5 @@
+@import url("https://fonts.googleapis.com/css2?family=Cormorant+Unicase:wght@300;400;500;600;700&family=Roboto:wght@300;400;700&display=swap");
+
 * {
   box-sizing: border-box;
   margin: 0;
@@ -6,6 +8,7 @@
 
 body {
   background-color: black;
+  font-family: "Roboto", sans-serif;
 }
 
 .container {
@@ -21,9 +24,10 @@ body {
 }
 
 .box {
-  border: 3px solid #ccc;
+  border: 3px solid white;
   width: 200px;
   height: 200px;
+  cursor: pointer;
 }
 
 .left-top {
@@ -60,4 +64,23 @@ body {
 .right-bottom {
   border-right: 0;
   border-bottom: 0;
+}
+
+.tic {
+  font-size: 12rem;
+  color: #b5b5b5;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.game-info {
+  color: white;
+  display: flex;
+  justify-content: space-evenly;
+}
+
+input[type="checkbox"],
+label {
+  font-size: 1.57rem;
 }
