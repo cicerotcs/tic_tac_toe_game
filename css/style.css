@@ -16,6 +16,10 @@ body {
   margin: 0 auto;
 }
 
+h3 {
+  margin-bottom: 0;
+}
+
 .game {
   display: flex;
   justify-content: center;
@@ -78,9 +82,42 @@ body {
   color: white;
   display: flex;
   justify-content: space-evenly;
+  margin: 20px 0;
+  align-items: center;
 }
 
 input[type="checkbox"],
 label {
   font-size: 1.57rem;
+}
+
+.tic-x,
+.tic-o {
+  cursor: pointer;
+  margin: 0 10px;
+  padding: 10px;
+  background-color: white;
+  border-radius: 5px;
+  color: black;
+}
+
+.tic-x:hover,
+.tic-o:hover {
+  background-color: #b5b5b5;
+  color: white;
+}
+
+.info-tic {
+  font-size: 2.17rem;
+}
+
+.score {
+  font-size: 2.18rem;
+}
+
+.player1,
+.player2,
+.computer,
+.tie {
+  text-align: center;
 }
