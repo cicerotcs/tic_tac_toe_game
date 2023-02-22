@@ -101,7 +101,60 @@ checkbox.addEventListener("change", () => {
 });
 
 function checkWinner() {
-  if (gameArr[4] == "x" && gameArr[0] == "x" && gameArr[8] == "x") {
+  if (
+    gameArr[4] !== "" &&
+    gameArr[4] === gameArr[0] &&
+    gameArr[4] === gameArr[8]
+  ) {
+    console.log("winner");
+  }
+  if (
+    gameArr[4] !== "" &&
+    gameArr[4] === gameArr[2] &&
+    gameArr[4] === gameArr[6]
+  ) {
+    console.log("winner");
+  }
+  if (
+    gameArr[4] !== "" &&
+    gameArr[4] === gameArr[3] &&
+    gameArr[4] === gameArr[5]
+  ) {
+    console.log("winner");
+  }
+  if (
+    gameArr[4] !== "" &&
+    gameArr[4] === gameArr[1] &&
+    gameArr[4] === gameArr[7]
+  ) {
+    console.log("winner");
+  }
+  if (
+    gameArr[0] !== "" &&
+    gameArr[0] === gameArr[1] &&
+    gameArr[0] === gameArr[2]
+  ) {
+    console.log("winner");
+  }
+  if (
+    gameArr[0] !== "" &&
+    gameArr[0] === gameArr[3] &&
+    gameArr[0] === gameArr[6]
+  ) {
+    console.log("winner");
+  }
+  if (
+    gameArr[2] !== "" &&
+    gameArr[2] === gameArr[5] &&
+    gameArr[2] === gameArr[8]
+  ) {
+    console.log("winner");
+  }
+  if (
+    gameArr[6] !== "" &&
+    gameArr[6] === gameArr[7] &&
+    gameArr[6] === gameArr[8]
+  ) {
     console.log("winner");
   }
 }
@@ -124,9 +177,11 @@ function startGame(tic) {
   tic.classList.add("tic");
   gameArr[tic.dataset.tic] = actualPlayer.tic;
 
+  console.log(gameArr);
+
   playerTurn();
 
-  //checkWinner();
+  checkWinner();
 }
 
 function selectPlayer() {
