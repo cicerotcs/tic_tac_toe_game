@@ -1,0 +1,63 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background-color: black;
+}
+
+.container {
+  width: 70%;
+  margin: 0 auto;
+}
+
+.game {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
+
+.box {
+  border: 3px solid #ccc;
+  width: 200px;
+  height: 200px;
+}
+
+.left-top {
+  border-top: 0;
+  border-left: 0;
+}
+
+.left-middle {
+  border-left: 0;
+}
+
+.left-bottom {
+  border-left: 0;
+  border-bottom: 0;
+}
+
+.center-top {
+  border-top: 0;
+}
+
+.center-bottom {
+  border-bottom: 0;
+}
+
+.right-top {
+  border-top: 0;
+  border-right: 0;
+}
+
+.right-middle {
+  border-right: 0;
+}
+
+.right-bottom {
+  border-right: 0;
+  border-bottom: 0;
+}
