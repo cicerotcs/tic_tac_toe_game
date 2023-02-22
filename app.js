@@ -15,17 +15,24 @@ const ticO = document.querySelector(".tic-o");
 let gameArr = ["", "", "", "", "", "", "", ""];
 
 let playersInfo = {
+  firstPlayer: null,
   player1: {
+    name: "player1",
     score: 0,
     tic: null,
+    myTurn: false,
   },
   player2: {
+    name: "player2",
     score: 0,
     tic: null,
+    myTurn: false,
   },
   computer: {
+    name: "computer",
     score: 0,
     tic: null,
+    myTurn: false,
   },
 };
 
@@ -40,6 +47,12 @@ function chooseTic(event) {
   playersInfo.player1.tic = playerTic.dataset.choice;
   playersInfo.computer.tic = computerTic.innerHTML;
   ticChoice.style = "display: none";
+
+  playersInfo.firstPlayer = selectPlayer();
+  playersInfo.firstPlayer.myTurn = true;
+
+  //console.log(playersInfo.player1.myTurn);
+  //console.log(playersInfo.computer.myTurn);
 }
 
 function generateTicForEachPlayer() {
@@ -75,6 +88,9 @@ checkbox.addEventListener("change", () => {
     computer.style = "display:none";
     player2.style = "display:inline";
     ticChoice.style = "display:none";
+
+    playersInfo.firstPlayer = selectPlayer();
+    playersInfo.firstPlayer.myTurn = true;
   } else {
     label.innerText = "1P";
     computer.style = "display: inline";
@@ -91,11 +107,26 @@ function checkWinner() {
 }
 
 function startGame(tic) {
-  let player = selectPlayer();
-  tic.textContent = player.tic;
+  let actualPlayer = null;
+  let player1 = playersInfo.player1;
+  let player2 = playersInfo.player2;
+  let computer = playersInfo.computer;
+
+  if (player1.myTurn === true) {
+    actualPlayer = player1;
+  } else if (player2.myTurn === true) {
+    actualPlayer = player2;
+  } else {
+    actualPlayer = computer;
+  }
+
+  tic.textContent = actualPlayer.tic;
   tic.classList.add("tic");
-  gameArr[tic.dataset.tic] = playersInfo.player1.tic;
-  checkWinner();
+  gameArr[tic.dataset.tic] = actualPlayer.tic;
+
+  playerTurn();
+
+  //checkWinner();
 }
 
 function selectPlayer() {
@@ -117,15 +148,37 @@ function selectPlayer() {
   return selectedPlayer;
 }
 
-function playerTurn() {}
+function playerTurn() {
+  if (!checkbox.checked) {
+    if (playersInfo.player1.myTurn === true) {
+      playersInfo.computer.myTurn = true;
+      playersInfo.player1.myTurn = false;
+    } else {
+      playersInfo.player1.myTurn = true;
+      playersInfo.computer.myTurn = false;
+    }
+  } else {
+    if (playersInfo.player1.myTurn === true) {
+      playersInfo.player2.myTurn = true;
+      playersInfo.player1.myTurn = false;
+    } else {
+      playersInfo.player1.myTurn = true;
+      playersInfo.player2.myTurn = false;
+    }
+  }
+}
 
 boxes.forEach((box) => {
-  box.addEventListener("click", (event) => {
-    let tic = event.target;
-    if (playersInfo.player1.tic === null) {
-      alert("Please select your weapon");
-    } else {
-      startGame(tic);
-    }
-  });
+  box.addEventListener(
+    "click",
+    (event) => {
+      let tic = event.target;
+      if (playersInfo.player1.tic === null) {
+        alert("Please select your weapon");
+      } else {
+        startGame(tic);
+      }
+    },
+    { once: true }
+  );
 });
