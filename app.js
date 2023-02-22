@@ -12,6 +12,8 @@ const computerTic = document.querySelector(".computer .info-tic");
 const ticX = document.querySelector(".tic-x");
 const ticO = document.querySelector(".tic-o");
 
+let gameArr = ["", "", "", "", "", "", "", ""];
+
 let playersInfo = {
   player1: {
     score: 0,
@@ -29,15 +31,15 @@ let playersInfo = {
 
 function chooseTic(event) {
   let playerTic = event.target;
-  setTimeout(() => {
-    ticChoice.style = "display: none";
-  }, 1000);
   if (playerTic.dataset.choice === "x") {
     computerTic.innerHTML = ticO.dataset.choice;
   } else {
     computerTic.innerHTML = ticX.dataset.choice;
   }
   player1Tic.innerHTML = playerTic.dataset.choice;
+  playersInfo.player1.tic = playerTic.dataset.choice;
+  playersInfo.computer.tic = computerTic.innerHTML;
+  ticChoice.style = "display: none";
 }
 
 function generateTicForEachPlayer() {
@@ -54,7 +56,6 @@ function generateTicForEachPlayer() {
   } else {
     playersInfo.player1.tic = null;
     playersInfo.player2.tic = null;
-    //chooseTic();
   }
 
   player1Tic.innerHTML = playersInfo.player1.tic;
@@ -83,10 +84,48 @@ checkbox.addEventListener("change", () => {
   generateTicForEachPlayer();
 });
 
+function checkWinner() {
+  if (gameArr[4] == "x" && gameArr[0] == "x" && gameArr[8] == "x") {
+    console.log("winner");
+  }
+}
+
+function startGame(tic) {
+  let player = selectPlayer();
+  tic.textContent = player.tic;
+  tic.classList.add("tic");
+  gameArr[tic.dataset.tic] = playersInfo.player1.tic;
+  checkWinner();
+}
+
+function selectPlayer() {
+  let player = Math.floor(Math.random() * 2);
+  let selectedPlayer = null;
+  if (!checkbox.checked) {
+    if (player === 0) {
+      selectedPlayer = playersInfo.player1;
+    } else {
+      selectedPlayer = playersInfo.computer;
+    }
+  } else {
+    if (player === 0) {
+      selectedPlayer = playersInfo.player1;
+    } else {
+      selectedPlayer = playersInfo.player2;
+    }
+  }
+  return selectedPlayer;
+}
+
+function playerTurn() {}
+
 boxes.forEach((box) => {
   box.addEventListener("click", (event) => {
     let tic = event.target;
-    tic.textContent = "x";
-    tic.classList.add("tic");
+    if (playersInfo.player1.tic === null) {
+      alert("Please select your weapon");
+    } else {
+      startGame(tic);
+    }
   });
 });
