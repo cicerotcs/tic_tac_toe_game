@@ -14,29 +14,33 @@ const ticO = document.querySelector(".tic-o");
 
 let gameArr = ["", "", "", "", "", "", "", ""];
 
+let actualPlayer = null;
+
 let playersInfo = {
   firstPlayer: null,
   player1: {
     name: "player1",
     score: 0,
     tic: null,
-    myTurn: false,
+    nextPlayer: false,
   },
   player2: {
     name: "player2",
     score: 0,
     tic: null,
-    myTurn: false,
+    nextPlayer: false,
   },
   computer: {
     name: "computer",
     score: 0,
     tic: null,
-    myTurn: false,
+    nextPlayer: false,
   },
 };
 
+// this function allows the player choose their tic if decided to player against the computer
 function chooseTic(event) {
+  let { player1, computer, firstPlayer } = playersInfo;
   let playerTic = event.target;
   if (playerTic.dataset.choice === "x") {
     computerTic.innerHTML = ticO.dataset.choice;
@@ -44,130 +48,82 @@ function chooseTic(event) {
     computerTic.innerHTML = ticX.dataset.choice;
   }
   player1Tic.innerHTML = playerTic.dataset.choice;
-  playersInfo.player1.tic = playerTic.dataset.choice;
-  playersInfo.computer.tic = computerTic.innerHTML;
+  player1.tic = playerTic.dataset.choice;
+  computer.tic = computerTic.innerHTML;
   ticChoice.style = "display: none";
 
-  playersInfo.firstPlayer = selectPlayer();
-  playersInfo.firstPlayer.myTurn = true;
-
-  //console.log(playersInfo.player1.myTurn);
-  //console.log(playersInfo.computer.myTurn);
+  firstPlayer = selectPlayer();
+  firstPlayer.nextPlayer = true;
 }
 
+// this function will automatically choose a tic for each player if the player decides to play with another person
 function generateTicForEachPlayer() {
-  if (checkbox.checked) {
-    const tic = Math.floor(Math.random() * 2);
+  const { player1, player2 } = playersInfo;
 
-    if (tic === 0) {
-      playersInfo.player1.tic = "o";
-      playersInfo.player2.tic = "x";
+  if (checkbox.checked) {
+    const num = Math.floor(Math.random() * 2);
+    if (num === 0) {
+      player1.tic = "o";
+      player2.tic = "x";
     } else {
-      playersInfo.player1.tic = "x";
-      playersInfo.player2.tic = "o";
+      player1.tic = "x";
+      player2.tic = "o";
     }
   } else {
-    playersInfo.player1.tic = null;
-    playersInfo.player2.tic = null;
+    player1.tic = null;
+    player2.tic = null;
   }
 
-  player1Tic.innerHTML = playersInfo.player1.tic;
-  player2Tic.innerHTML = playersInfo.player2.tic;
+  player1Tic.innerHTML = player1.tic;
+  player2Tic.innerHTML = player2.tic;
 }
 
-function numOfPlayers(players) {
-  return players;
-}
-
-ticX.addEventListener("click", chooseTic);
-ticO.addEventListener("click", chooseTic);
-
-checkbox.addEventListener("change", () => {
-  if (checkbox.checked) {
-    label.innerText = "2P";
-    computer.style = "display:none";
-    player2.style = "display:inline";
-    ticChoice.style = "display:none";
-
-    playersInfo.firstPlayer = selectPlayer();
-    playersInfo.firstPlayer.myTurn = true;
-  } else {
-    label.innerText = "1P";
-    computer.style = "display: inline";
-    player2.style = "display:none";
-    ticChoice.style = "display:inline";
-  }
-  generateTicForEachPlayer();
-});
-
+// function to check if there is a winner in the game, checking all the possible combinations
 function checkWinner() {
-  if (
-    gameArr[4] !== "" &&
-    gameArr[4] === gameArr[0] &&
-    gameArr[4] === gameArr[8]
-  ) {
-    console.log("winner");
+  const winningCombos = [
+    // horizontal
+    [0, 1, 2],
+    [3, 4, 5],
+    [6, 7, 8],
+    // vertical
+    [0, 3, 6],
+    [1, 4, 7],
+    [2, 5, 8],
+    // diagonal
+    [0, 4, 8],
+    [2, 4, 6],
+  ];
+
+  let winner = "";
+  for (let combo of winningCombos) {
+    const [a, b, c] = combo;
+
+    if (
+      gameArr[a] !== "" &&
+      gameArr[a] === gameArr[b] &&
+      gameArr[a] === gameArr[c]
+    ) {
+      winner = gameArr[a];
+      break;
+    }
   }
-  if (
-    gameArr[4] !== "" &&
-    gameArr[4] === gameArr[2] &&
-    gameArr[4] === gameArr[6]
-  ) {
-    console.log("winner");
-  }
-  if (
-    gameArr[4] !== "" &&
-    gameArr[4] === gameArr[3] &&
-    gameArr[4] === gameArr[5]
-  ) {
-    console.log("winner");
-  }
-  if (
-    gameArr[4] !== "" &&
-    gameArr[4] === gameArr[1] &&
-    gameArr[4] === gameArr[7]
-  ) {
-    console.log("winner");
-  }
-  if (
-    gameArr[0] !== "" &&
-    gameArr[0] === gameArr[1] &&
-    gameArr[0] === gameArr[2]
-  ) {
-    console.log("winner");
-  }
-  if (
-    gameArr[0] !== "" &&
-    gameArr[0] === gameArr[3] &&
-    gameArr[0] === gameArr[6]
-  ) {
-    console.log("winner");
-  }
-  if (
-    gameArr[2] !== "" &&
-    gameArr[2] === gameArr[5] &&
-    gameArr[2] === gameArr[8]
-  ) {
-    console.log("winner");
-  }
-  if (
-    gameArr[6] !== "" &&
-    gameArr[6] === gameArr[7] &&
-    gameArr[6] === gameArr[8]
-  ) {
-    console.log("winner");
+
+  if (winner) {
+    console.log(`${winner} wins!`);
+  } else if (!gameArr.includes("")) {
+    console.log("It's a tie!");
+  } else {
+    console.log("Keep playing...");
   }
 }
 
+// main function
 function startGame(tic) {
-  let actualPlayer = null;
-  let player1 = playersInfo.player1;
-  let player2 = playersInfo.player2;
-  let computer = playersInfo.computer;
+  const { player1, player2, computer } = playersInfo;
 
-  if (player1.myTurn === true) {
+  if (player1.nextPlayer) {
     actualPlayer = player1;
-  } else if (player2.myTurn === true) {
+  } else if (player2.nextPlayer) {
     actualPlayer = player2;
   } else {
     actualPlayer = computer;
@@ -177,51 +133,77 @@ function startGame(tic) {
   tic.classList.add("tic");
   gameArr[tic.dataset.tic] = actualPlayer.tic;
 
-  console.log(gameArr);
-
-  playerTurn();
-
+  nextPlayer();
   checkWinner();
 }
 
+// This function will automatically select who is gonna be the first player
 function selectPlayer() {
-  let player = Math.floor(Math.random() * 2);
+  let num = Math.floor(Math.random() * 2);
   let selectedPlayer = null;
+  const { player1, player2, computer } = playersInfo;
+
   if (!checkbox.checked) {
-    if (player === 0) {
-      selectedPlayer = playersInfo.player1;
+    if (num === 0) {
+      selectedPlayer = player1;
     } else {
-      selectedPlayer = playersInfo.computer;
+      selectedPlayer = computer;
     }
   } else {
-    if (player === 0) {
-      selectedPlayer = playersInfo.player1;
+    if (num === 0) {
+      selectedPlayer = player1;
     } else {
-      selectedPlayer = playersInfo.player2;
+      selectedPlayer = player2;
     }
   }
   return selectedPlayer;
 }
 
-function playerTurn() {
+// Function to return the next player
+function nextPlayer() {
+  const { player1, player2, computer } = playersInfo;
   if (!checkbox.checked) {
-    if (playersInfo.player1.myTurn === true) {
-      playersInfo.computer.myTurn = true;
-      playersInfo.player1.myTurn = false;
+    if (player1.nextPlayer) {
+      computer.nextPlayer = true;
+      player1.nextPlayer = false;
     } else {
-      playersInfo.player1.myTurn = true;
-      playersInfo.computer.myTurn = false;
+      player1.nextPlayer = true;
+      computer.nextPlayer = false;
     }
   } else {
-    if (playersInfo.player1.myTurn === true) {
-      playersInfo.player2.myTurn = true;
-      playersInfo.player1.myTurn = false;
+    if (player1.nextPlayer) {
+      player2.nextPlayer = true;
+      player1.nextPlayer = false;
     } else {
-      playersInfo.player1.myTurn = true;
-      playersInfo.player2.myTurn = false;
+      player1.nextPlayer = true;
+      player2.nextPlayer = false;
     }
   }
 }
+
+// event listeners
+
+ticX.addEventListener("click", chooseTic);
+ticO.addEventListener("click", chooseTic);
+
+checkbox.addEventListener("change", () => {
+  let { firstPlayer } = playersInfo;
+  if (checkbox.checked) {
+    label.innerText = "2P";
+    computer.style = "display:none";
+    player2.style = "display:inline";
+    ticChoice.style = "display:none";
+
+    firstPlayer = selectPlayer();
+    firstPlayer.nextPlayer = true;
+  } else {
+    label.innerText = "1P";
+    computer.style = "display: inline";
+    player2.style = "display:none";
+    ticChoice.style = "display:inline";
+  }
+  generateTicForEachPlayer();
+});
 
 boxes.forEach((box) => {
   box.addEventListener(
@@ -234,6 +216,6 @@ boxes.forEach((box) => {
         startGame(tic);
       }
     },
-    { once: true }
+    { once: true } // bug
   );
 });
