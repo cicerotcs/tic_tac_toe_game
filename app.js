@@ -25,6 +25,12 @@ const ticO = document.querySelector(".tic-o");
 
 let gameArr = ["", "", "", "", "", "", "", ""];
 
+let info = null;
+
+if (localStorage.getItem("playerInfo") !== null) {
+  info = JSON.parse(localStorage.getItem("playerInfo"));
+}
+
 let actualPlayer = null;
 
 let playersInfo = {
@@ -32,30 +38,30 @@ let playersInfo = {
   winner: null,
   player: {
     name: "player",
-    score: 0,
+    score: info && info.player.score,
     tic: null,
     nextPlayer: false,
   },
   player1: {
     name: "player1",
-    score: 0,
+    score: info && info.player1.score,
     tic: null,
     nextPlayer: false,
   },
   player2: {
     name: "player2",
-    score: 0,
+    score: info && info.player2.score,
     tic: null,
     nextPlayer: false,
   },
   computer: {
     name: "computer",
-    score: 0,
+    score: info && info.computer.score,
     tic: null,
     nextPlayer: false,
   },
   tie: {
-    score: 0,
+    score: info && info.tie.score,
   },
 };
 
@@ -135,27 +141,39 @@ function checkWinner(currentPlayer) {
 
   if (winner) {
     playersInfo.winner = currentPlayer.name;
+    currentPlayer.score += 1;
     setTimeout(() => {
       alert(`${currentPlayer.name} wins!`);
-    }, 1000);
-    currentPlayer.score += 1;
-    if (currentPlayer.name === "player1") {
-      player1Score.textContent = currentPlayer.score;
-    } else if (currentPlayer.name === "player2") {
-      player2Score.textContent = currentPlayer.score;
-    } else if (currentPlayer.name === "player") {
-      playerScore.textContent = currentPlayer.score;
-    } else {
-      computerScore.textContent = currentPlayer.score;
-    }
+    }, 500);
+
+    setTimeout(() => {
+      location.reload();
+    }, 1500);
   } else if (!gameArr.includes("")) {
+    playersInfo.tie.score += 1;
     setTimeout(() => {
       alert("It's a tie!");
-    }, 1000);
-    playersInfo.tie.score += 1;
-    tie.textContent = playersInfo.tie.score;
+    }, 500);
+    setTimeout(() => {
+      location.reload();
+    }, 1500);
   } else {
     console.log("Keep playing...");
+  }
+  localStorage.setItem("playerInfo", JSON.stringify(playersInfo));
+}
+
+function scoreTable() {
+  if (info !== null) {
+    playerScore.textContent =
+      info.player.score === null ? 0 : info.player.score;
+    player1Score.textContent =
+      info.player1.score === null ? 0 : info.player1.score;
+    player2Score.textContent =
+      info.player2.score === null ? 0 : info.player2.score;
+    computerScore.textContent =
+      info.computer.score === null ? 0 : info.computer.score;
+    tie.textContent = info.tie.score === null ? 0 : info.tie.score;
   }
 }
 
@@ -176,7 +194,9 @@ function startGame(tic) {
   addTicCheckWinnerAndExecuteNextPlayer(tic, actualPlayer);
 
   if (computer.nextPlayer && playersInfo.winner === null) {
-    computerPlayer();
+    setTimeout(() => {
+      computerPlayer();
+    }, 500);
   }
 }
 
@@ -266,8 +286,6 @@ checkbox.addEventListener("change", () => {
 
     firstPlayer = selectPlayer();
     firstPlayer.nextPlayer = true;
-
-    console.log(firstPlayer);
   } else {
     label.innerText = "1P";
     computer.style = "display: inline";
@@ -297,3 +315,5 @@ boxes.forEach((box) => {
     { once: true } // bug
   );
 });
+
+scoreTable();
