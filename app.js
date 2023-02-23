@@ -54,6 +54,10 @@ function chooseTic(event) {
 
   firstPlayer = selectPlayer();
   firstPlayer.nextPlayer = true;
+
+  if (firstPlayer.name === "computer") {
+    computerPlayer();
+  }
 }
 
 // this function will automatically choose a tic for each player if the player decides to play with another person
@@ -135,6 +139,10 @@ function startGame(tic) {
 
   nextPlayer();
   checkWinner();
+
+  if (computer.nextPlayer) {
+    computerPlayer();
+  }
 }
 
 // This function will automatically select who is gonna be the first player
@@ -181,6 +189,25 @@ function nextPlayer() {
   }
 }
 
+// function for testing
+
+function computerPlayer() {
+  const { computer } = playersInfo;
+  let randomIndex = Math.floor(Math.random() * 9);
+
+  for (let i = 0; i < boxes.length; i++) {
+    let index = (randomIndex + i) % boxes.length;
+    if (boxes[index].textContent === "") {
+      boxes[index].textContent = computer.tic;
+      boxes[index].classList.add("tic");
+      gameArr[boxes[index].dataset.tic] = computer.tic;
+      nextPlayer();
+      checkWinner();
+      break;
+    }
+  }
+}
+
 // event listeners
 
 ticX.addEventListener("click", chooseTic);
@@ -196,6 +223,8 @@ checkbox.addEventListener("change", () => {
 
     firstPlayer = selectPlayer();
     firstPlayer.nextPlayer = true;
+
+    console.log(firstPlayer);
   } else {
     label.innerText = "1P";
     computer.style = "display: inline";
