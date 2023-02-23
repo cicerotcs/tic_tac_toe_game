@@ -1,17 +1,23 @@
 const boxes = document.querySelectorAll(".box");
 const checkbox = document.querySelector("input");
 const label = document.querySelector("label");
+
+const player = document.querySelector(".player");
+const player1 = document.querySelector(".player1");
 const player2 = document.querySelector(".player2");
 const computer = document.querySelector(".computer");
+
 const ticChoice = document.querySelector(".tic-choice");
 
+const playerTic = document.querySelector(".player .info-tic");
 const player1Tic = document.querySelector(".player1 .info-tic");
 const player2Tic = document.querySelector(".player2 .info-tic");
 const computerTic = document.querySelector(".computer .info-tic");
 
+const playerScore = document.querySelector(".player .score");
 const player1Score = document.querySelector(".player1 .score");
 const player2Score = document.querySelector(".player2 .score");
-const ComputerScore = document.querySelector(".computer .score");
+const computerScore = document.querySelector(".computer .score");
 const tie = document.querySelector(".tie .score");
 
 const ticX = document.querySelector(".tic-x");
@@ -55,15 +61,15 @@ let playersInfo = {
 
 // this function allows the player choose their tic if decided to player against the computer
 function chooseTic(event) {
-  let { player1, computer, firstPlayer } = playersInfo;
-  let playerTic = event.target;
-  if (playerTic.dataset.choice === "x") {
+  let { player, computer, firstPlayer } = playersInfo;
+  let box = event.target;
+  if (box.dataset.choice === "x") {
     computerTic.innerHTML = ticO.dataset.choice;
   } else {
     computerTic.innerHTML = ticX.dataset.choice;
   }
-  player1Tic.innerHTML = playerTic.dataset.choice;
-  player1.tic = playerTic.dataset.choice;
+  playerTic.innerHTML = box.dataset.choice;
+  player.tic = box.dataset.choice;
   computer.tic = computerTic.innerHTML;
   ticChoice.style = "display: none";
 
@@ -137,8 +143,10 @@ function checkWinner(currentPlayer) {
       player1Score.textContent = currentPlayer.score;
     } else if (currentPlayer.name === "player2") {
       player2Score.textContent = currentPlayer.score;
+    } else if (currentPlayer.name === "player") {
+      playerScore.textContent = currentPlayer.score;
     } else {
-      ComputerScore.textContent = currentPlayer.score;
+      computerScore.textContent = currentPlayer.score;
     }
   } else if (!gameArr.includes("")) {
     setTimeout(() => {
@@ -153,9 +161,11 @@ function checkWinner(currentPlayer) {
 
 // main function
 function startGame(tic) {
-  const { player1, player2, computer } = playersInfo;
+  const { player, player1, player2, computer } = playersInfo;
 
-  if (player1.nextPlayer) {
+  if (player.nextPlayer) {
+    actualPlayer = player;
+  } else if (player1.nextPlayer) {
     actualPlayer = player1;
   } else if (player2.nextPlayer) {
     actualPlayer = player2;
@@ -174,11 +184,11 @@ function startGame(tic) {
 function selectPlayer() {
   let num = Math.floor(Math.random() * 2);
   let selectedPlayer = null;
-  const { player1, player2, computer } = playersInfo;
+  const { player, player1, player2, computer } = playersInfo;
 
   if (!checkbox.checked) {
     if (num === 0) {
-      selectedPlayer = player1;
+      selectedPlayer = player;
     } else {
       selectedPlayer = computer;
     }
@@ -196,11 +206,11 @@ function selectPlayer() {
 function nextPlayer() {
   const { player, player1, player2, computer } = playersInfo;
   if (!checkbox.checked) {
-    if (player1.nextPlayer) {
+    if (player.nextPlayer) {
       computer.nextPlayer = true;
-      player1.nextPlayer = false;
+      player.nextPlayer = false;
     } else {
-      player1.nextPlayer = true;
+      player.nextPlayer = true;
       computer.nextPlayer = false;
     }
   } else {
@@ -246,8 +256,12 @@ checkbox.addEventListener("change", () => {
   let { firstPlayer } = playersInfo;
   if (checkbox.checked) {
     label.innerText = "2P";
-    computer.style = "display:none";
+
+    player1.style = "display:inline";
     player2.style = "display:inline";
+
+    computer.style = "display:none";
+    player.style = "display:none";
     ticChoice.style = "display:none";
 
     firstPlayer = selectPlayer();
@@ -259,6 +273,8 @@ checkbox.addEventListener("change", () => {
     computer.style = "display: inline";
     player2.style = "display:none";
     ticChoice.style = "display:inline";
+    player1.style = "display:none";
+    player.style = "display: inline";
   }
   generateTicForEachPlayer();
 });
@@ -268,8 +284,12 @@ boxes.forEach((box) => {
     "click",
     (event) => {
       let tic = event.target;
-      if (playersInfo.player1.tic === null) {
-        alert("Please select your weapon");
+      if (!checkbox.checked) {
+        if (playersInfo.player.tic === null) {
+          alert("Please select your weapon");
+        } else {
+          startGame(tic);
+        }
       } else {
         startGame(tic);
       }
