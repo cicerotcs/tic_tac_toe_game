@@ -12,3 +12,5 @@
 8. The game continues until either a player wins or the board is completely filled.
 9. If a player wins, the game displays a message declaring that player as the winner, update it's score and reset the game.
 10. If the board is completely filled with no winner, the game displays a message declaring the game a tie and reset the game.
+
+game website: https://cicerotcs.github.io/tic_tac_toe_game/
