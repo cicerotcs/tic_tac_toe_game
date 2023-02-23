@@ -2,6 +2,8 @@ const boxes = document.querySelectorAll(".box");
 const checkbox = document.querySelector("input");
 const label = document.querySelector("label");
 
+const block2 = document.querySelector(".block2");
+
 const player = document.querySelector(".player");
 const player1 = document.querySelector(".player1");
 const player2 = document.querySelector(".player2");
@@ -281,6 +283,8 @@ checkbox.addEventListener("change", () => {
     player1.style = "display:inline";
     player2.style = "display:inline";
 
+    block2.style = "display: flex";
+
     computer.style = "display:none";
     player.style = "display:none";
     ticChoice.style = "display:none";
@@ -294,6 +298,8 @@ checkbox.addEventListener("change", () => {
     ticChoice.style = "display:inline";
     player1.style = "display:none";
     player.style = "display: inline";
+
+    block2.style = "display: none";
   }
   generateTicForEachPlayer();
 });
