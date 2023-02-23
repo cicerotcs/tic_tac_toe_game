@@ -9,6 +9,11 @@ const player1Tic = document.querySelector(".player1 .info-tic");
 const player2Tic = document.querySelector(".player2 .info-tic");
 const computerTic = document.querySelector(".computer .info-tic");
 
+const player1Score = document.querySelector(".player1 .score");
+const player2Score = document.querySelector(".player2 .score");
+const ComputerScore = document.querySelector(".computer .score");
+const tie = document.querySelector(".tie .score");
+
 const ticX = document.querySelector(".tic-x");
 const ticO = document.querySelector(".tic-o");
 
@@ -18,6 +23,13 @@ let actualPlayer = null;
 
 let playersInfo = {
   firstPlayer: null,
+  winner: null,
+  player: {
+    name: "player",
+    score: 0,
+    tic: null,
+    nextPlayer: false,
+  },
   player1: {
     name: "player1",
     score: 0,
@@ -35,6 +47,9 @@ let playersInfo = {
     score: 0,
     tic: null,
     nextPlayer: false,
+  },
+  tie: {
+    score: 0,
   },
 };
 
@@ -83,7 +98,7 @@ function generateTicForEachPlayer() {
 }
 
 // function to check if there is a winner in the game, checking all the possible combinations
-function checkWinner() {
+function checkWinner(currentPlayer) {
   const winningCombos = [
     // horizontal
     [0, 1, 2],
@@ -113,9 +128,24 @@ function checkWinner() {
   }
 
   if (winner) {
-    console.log(`${winner} wins!`);
+    playersInfo.winner = currentPlayer.name;
+    setTimeout(() => {
+      alert(`${currentPlayer.name} wins!`);
+    }, 1000);
+    currentPlayer.score += 1;
+    if (currentPlayer.name === "player1") {
+      player1Score.textContent = currentPlayer.score;
+    } else if (currentPlayer.name === "player2") {
+      player2Score.textContent = currentPlayer.score;
+    } else {
+      ComputerScore.textContent = currentPlayer.score;
+    }
   } else if (!gameArr.includes("")) {
-    console.log("It's a tie!");
+    setTimeout(() => {
+      alert("It's a tie!");
+    }, 1000);
+    playersInfo.tie.score += 1;
+    tie.textContent = playersInfo.tie.score;
   } else {
     console.log("Keep playing...");
   }
@@ -133,14 +163,9 @@ function startGame(tic) {
     actualPlayer = computer;
   }
 
-  tic.textContent = actualPlayer.tic;
-  tic.classList.add("tic");
-  gameArr[tic.dataset.tic] = actualPlayer.tic;
+  addTicCheckWinnerAndExecuteNextPlayer(tic, actualPlayer);
 
-  nextPlayer();
-  checkWinner();
-
-  if (computer.nextPlayer) {
+  if (computer.nextPlayer && playersInfo.winner === null) {
     computerPlayer();
   }
 }
@@ -169,7 +194,7 @@ function selectPlayer() {
 
 // Function to return the next player
 function nextPlayer() {
-  const { player1, player2, computer } = playersInfo;
+  const { player, player1, player2, computer } = playersInfo;
   if (!checkbox.checked) {
     if (player1.nextPlayer) {
       computer.nextPlayer = true;
@@ -189,7 +214,15 @@ function nextPlayer() {
   }
 }
 
-// function for testing
+function addTicCheckWinnerAndExecuteNextPlayer(box, player) {
+  box.textContent = player.tic;
+  box.classList.add("tic");
+  gameArr[box.dataset.tic] = player.tic;
+  nextPlayer();
+  checkWinner(player);
+}
+
+// function to allow the computer play by itself
 
 function computerPlayer() {
   const { computer } = playersInfo;
@@ -198,11 +231,7 @@ function computerPlayer() {
   for (let i = 0; i < boxes.length; i++) {
     let index = (randomIndex + i) % boxes.length;
     if (boxes[index].textContent === "") {
-      boxes[index].textContent = computer.tic;
-      boxes[index].classList.add("tic");
-      gameArr[boxes[index].dataset.tic] = computer.tic;
-      nextPlayer();
-      checkWinner();
+      addTicCheckWinnerAndExecuteNextPlayer(boxes[index], computer);
       break;
     }
   }
