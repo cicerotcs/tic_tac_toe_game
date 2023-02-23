@@ -143,6 +143,11 @@ label {
   text-align: center;
 }
 
+.showNextPlayer {
+  text-align: center;
+  color: red;
+}
+
 @media (min-width: 320px) and (max-width: 992px) {
   .box {
     width: 110px;
