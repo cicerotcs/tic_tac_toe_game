@@ -1,4 +1,4 @@
-# TIC TAC TOW GAME
+# TIC TAC TOE GAME
 
 ### How the game works
 
