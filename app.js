@@ -22,6 +22,8 @@ const player2Score = document.querySelector(".player2 .score");
 const computerScore = document.querySelector(".computer .score");
 const tie = document.querySelector(".tie .score");
 
+const showNextPlayer = document.querySelector(".next");
+
 const ticX = document.querySelector(".tic-x");
 const ticO = document.querySelector(".tic-o");
 
