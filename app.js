@@ -276,6 +276,9 @@ ticX.addEventListener("click", chooseTic);
 ticO.addEventListener("click", chooseTic);
 
 checkbox.addEventListener("change", () => {
+  if (gameArr.includes("x") || gameArr.includes("o")) {
+    location.reload();
+  }
   let { firstPlayer } = playersInfo;
   if (checkbox.checked) {
     label.innerText = "2P";
