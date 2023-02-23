@@ -247,6 +247,7 @@ function nextPlayer() {
 function addTicCheckWinnerAndExecuteNextPlayer(box, player) {
   box.textContent = player.tic;
   box.classList.add("tic");
+  box.style = "pointer-events: none";
   gameArr[box.dataset.tic] = player.tic;
   nextPlayer();
   checkWinner(player);
@@ -298,22 +299,18 @@ checkbox.addEventListener("change", () => {
 });
 
 boxes.forEach((box) => {
-  box.addEventListener(
-    "click",
-    (event) => {
-      let tic = event.target;
-      if (!checkbox.checked) {
-        if (playersInfo.player.tic === null) {
-          alert("Please select your weapon");
-        } else {
-          startGame(tic);
-        }
+  box.addEventListener("click", (event) => {
+    let tic = event.target;
+    if (!checkbox.checked) {
+      if (playersInfo.player.tic === null) {
+        alert("Please select your weapon");
       } else {
         startGame(tic);
       }
-    },
-    { once: true } // bug
-  );
+    } else {
+      startGame(tic);
+    }
+  });
 });
 
 scoreTable();
