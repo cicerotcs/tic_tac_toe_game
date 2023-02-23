@@ -131,12 +131,12 @@ function checkWinner(currentPlayer) {
   for (let combo of winningCombos) {
     const [a, b, c] = combo;
 
-    if (
-      gameArr[a] !== "" &&
-      gameArr[a] === gameArr[b] &&
-      gameArr[a] === gameArr[c]
-    ) {
-      winner = gameArr[a];
+    const cellA = gameArr[a];
+    const cellB = gameArr[b];
+    const cellC = gameArr[c];
+
+    if (cellA !== "" && cellA === cellB && cellA === cellC) {
+      winner = cellA;
       break;
     }
   }
@@ -187,8 +187,10 @@ function startGame(tic) {
     actualPlayer = player;
   } else if (player1.nextPlayer) {
     actualPlayer = player1;
+    displayNextPlayer(player2);
   } else if (player2.nextPlayer) {
     actualPlayer = player2;
+    displayNextPlayer(player1);
   } else {
     actualPlayer = computer;
   }
@@ -267,6 +269,14 @@ function computerPlayer() {
       addTicCheckWinnerAndExecuteNextPlayer(boxes[index], computer);
       break;
     }
+  }
+}
+
+function displayNextPlayer(player) {
+  if (player.name === "player1") {
+    showNextPlayer.textContent = "Player 1";
+  } else {
+    showNextPlayer.textContent = "Player 2";
   }
 }
 
