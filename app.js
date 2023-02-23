@@ -306,6 +306,8 @@ checkbox.addEventListener("change", () => {
 
     firstPlayer = selectPlayer();
     firstPlayer.nextPlayer = true;
+    
+    displayNextPlayer(firstPlayer);
   } else {
     label.innerText = "1P";
     computer.style = "display: inline";
